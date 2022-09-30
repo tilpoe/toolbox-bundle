@@ -73,6 +73,7 @@ class BootstrapCommand extends Cmd {
     private function initializeComposerPackages() {
         $this->bash("composer req " . implode(" ", [
             "doctrine/annotations",
+            "symfony/apache-pack",
             "nyholm/psr7",
             "symfony/uid",
             "symfony/psr-http-message-bridge",
