@@ -1,0 +1,39 @@
+{
+  "compilerOptions": {
+    "target": "es5",
+    "strict": true,
+    "sourceMap": true,
+    "esModuleInterop": true,
+    "noImplicitReturns": true,
+    "jsx": "react-jsx",
+    "resolveJsonModule": true,
+    "strictNullChecks": true,
+    "baseUrl": "",
+    "paths": {
+      "@api": ["frontend/api"],
+      "@api/*": ["frontend/api/*"],
+      "@app": ["frontend/app"],
+      "@app/*": ["frontend/app/*"],
+      "@components": ["frontend/components"],
+      "@components/*": ["frontend/components/*"],
+      "@hooks": ["frontend/hooks"],
+      "@hooks/*": ["frontend/hooks/*"],
+      "@page": ["frontend/pages"],
+      "@pages/*": ["frontend/pages/*"],
+      "@qr": ["frontend/qr"],
+      "@qr/*": ["frontend/qr/*"],
+      "@store": ["frontend/store"],
+
+      "@mui/material": ["node_modules/@mui/material"],
+
+      "@tilpoe/react-component-button": ["../../../packages/npm/@tilpoe/react-essentials/packages/component/button/src"],
+      "@tilpoe/react-component-label": ["../../../packages/npm/@tilpoe/react-essentials/packages/component/label/src"],
+      "@tilpoe/react-component-util": ["../../../packages/npm/@tilpoe/react-essentials/packages/component/util/src"],
+      "@tilpoe/react-navigation": ["../../../packages/npm/@tilpoe/react-essentials/packages/module/navigation/src"],
+      "@tilpoe/react-core": ["../../../packages/npm/@tilpoe/react-essentials/packages/module/core/src"]
+    },
+  },
+  "exclude": [
+    "vendor"
+  ]
+}
