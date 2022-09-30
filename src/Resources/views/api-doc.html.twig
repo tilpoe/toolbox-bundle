@@ -1,0 +1,365 @@
+<html>
+<head>
+    <script
+            src="https://code.jquery.com/jquery-3.6.0.slim.min.js"
+            integrity="sha256-u7e5khyithlIdTpu22PHhENmPcRdFiHRjhAuHcs05RI="
+            crossorigin="anonymous">
+    </script>
+    <style>
+        * {
+            box-sizing: border-box;
+            font-family: -apple-system,BlinkMacSystemFont,Segoe UI,Helvetica,Arial,sans-serif,Apple Color Emoji,Segoe UI Emoj;
+        }
+
+        body {
+            margin: 3rem;
+        }
+
+        #content {
+            width: 100%;
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .toolbox-api-route {
+            border-radius: 4px;
+            margin-bottom: 1rem;
+        }
+
+        .toolbox-api-route-preview {
+            display: flex;
+            width: 100%;
+            height: 3rem;
+            padding: 0.5rem;
+        }
+
+        .toolbox-api-route-preview:hover {
+            cursor: pointer;
+        }
+
+        .toolbox-api-route-preview-method {
+            align-items: center;
+            justify-content: center;
+            display: flex;
+            color: white;
+            font-weight: bold;
+            width: 5rem;
+            border-radius: 4px;
+        }
+
+        .toolbox-api-route-preview-route {
+            align-items: center;
+            justify-content: center;
+            display: flex;
+            margin-left: 1rem;
+            font-family: monospace;
+            font-size: 1.1rem;
+        }
+
+        .toolbox-api-route-preview-access {
+            align-items: center;
+            justify-content: flex-end;
+            display: flex;
+            font-size: 0.8rem;
+            font-weight: bold;
+            color: #e04133;
+            flex-grow: 1;
+            margin-right: 0.5rem;
+        }
+
+        .toolbox-api-route-info {
+            width: 100%;
+            display: none;
+            padding: 2rem 2rem 0 2rem;
+            flex-direction: column;
+        }
+
+        .toolbox-api-route-info-description {
+            margin: 0 0 0.5rem 0;
+        }
+
+        .toolbox-api-route-info-parameter {
+            display: flex;
+            width: 100%;
+            padding-top: 2rem;
+            flex-direction: column;
+            margin-bottom: 2rem;
+        }
+
+        .toolbox-api-route-info-parameter-definition {
+            display: flex;
+        }
+
+        .toolbox-api-route-info-parameter-name {
+            background: #f3f3f3;
+            font-family: monospace;
+            font-weight: bold;
+            font-size: 1rem;
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-right: 1rem;
+        }
+
+        .toolbox-api-route-info-parameter-type {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 0.8rem;
+            font-family: monospace;
+        }
+
+        .toolbox-api-route-info-parameter-required {
+            display: flex;
+            flex-grow: 1;
+            align-items: center;
+            justify-content: right;
+            font-size: 0.8rem;
+            color: #e09533;
+        }
+
+        .toolbox-api-route-info-parameter-description {
+            display: flex;
+            font-size: 0.8rem;
+            margin-top: 1rem;
+            flex-direction: column;
+        }
+
+        .toolbox-api-route-info-responses {
+            overflow-x: hidden;
+        }
+
+        .toolbox-api-route-info-responses table {
+            width: 100%;
+            word-break: normal;
+            overflow-x: auto;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+            border-spacing: 0px;
+        }
+
+        .toolbox-api-route-info-responses th {
+            border-bottom: 1px solid rgb(202, 205, 210);
+            font-size: 0.875rem;
+            line-height: 1.5rem;
+            font-weight: 500;
+            color: rgb(26,32,39);
+            padding-right: 20px;
+            padding-top: 12px;
+            padding-bottom: 12px;
+            text-align: left;
+        }
+
+        .toolbox-api-route-info-responses th:nth-child(1) {
+            width: 10%;
+        }
+
+        .toolbox-api-route-info-responses td {
+            border-bottom: 1px solid rgb(231, 235, 240);
+            font-size: 0.875rem;
+            line-height: 1.5rem;
+            color: rgb(26,32,39);
+            padding-right: 20px;
+            padding-top: 12px;
+            padding-bottom: 12px;
+            vertical-align: top;
+        }
+
+        .parameter-default {
+            color: #34acc0;
+            font-family: monospace;
+        }
+
+        .codeblock {
+            padding: 1em;
+            background: #f1f1f1;
+            margin: 16px auto;
+            border-radius: 4px;
+            font-family: monospace !important;
+            box-shadow: 0px 0px 4px 0px #bebebe;
+            color: #115d27;
+            white-space: break-spaces;
+        }
+
+        :root {
+            --color-get: 97, 175, 254;
+            --color-post: 73, 204, 144;
+            --color-delete: 249, 62, 62;
+            --color-put: 252, 161, 48;
+        }
+
+        .bg-method-GET {
+            background: rgb(var(--color-get));
+        }
+
+        .bg-border-top-GET {
+            border-top: 1px solid rgb(var(--color-get));
+        }
+
+        .bg-border-GET {
+            border: 1px solid rgb(var(--color-get));
+        }
+
+        .bg-GET {
+            background: rgba(var(--color-get), 0.1);
+        }
+
+        .bg-method-POST {
+            background: rgb(var(--color-post));
+        }
+
+        .bg-border-top-POST {
+            border-top: 1px solid rgb(var(--color-post));
+        }
+
+        .bg-border-POST {
+            border: 1px solid rgb(var(--color-post));
+        }
+
+        .bg-POST {
+            background: rgba(var(--color-post), 0.1);
+        }
+
+        .bg-method-DELETE {
+            background: rgb(var(--color-delete));
+        }
+
+        .bg-border-top-DELETE {
+            border-top: 1px solid rgb(var(--color-delete));
+        }
+
+        .bg-border-DELETE {
+            border: 1px solid rgb(var(--color-delete));
+        }
+
+        .bg-DELETE {
+            background: rgba(var(--color-delete), 0.1);
+        }
+
+        .bg-method-PUT {
+            background: rgb(var(--color-put));
+        }
+
+        .bg-border-top-PUT {
+            border-top: 1px solid rgb(var(--color-put));
+        }
+
+        .bg-border-PUT {
+            border: 1px solid rgb(var(--color-put));
+        }
+
+        .bg-PUT {
+            background: rgba(var(--color-put), 0.1);
+        }
+    </style>
+</head>
+
+<body>
+
+<div id="content">
+    <h1>API Documentation</h1>
+    {% for endpoint, routes in endpoints %}
+        <h2>{{ endpoint }}</h2>
+        {% for route in routes %}
+            <div class="toolbox-api-route {{ route["classes"]["border"] }}">
+                <div class="toolbox-api-route-preview {{ route["classes"]["bg"] }}">
+                    <div class="toolbox-api-route-preview-method {{ route["classes"]["method"] }}">
+                        {{ route["method"] }}
+                    </div>
+                    <div class="toolbox-api-route-preview-route">
+                        {{ route["path"] }}
+                    </div>
+                    {% if route["privileges"] | length == 0 %}
+                        <div class="toolbox-api-route-preview-access">
+                            no-access-control
+                        </div>
+                    {% endif %}
+                </div>
+                <div class="toolbox-api-route-info {{ route["classes"]["border-top"] }}">
+                    <div class="toolbox-api-route-info-description">
+                        {{ route["description"] }}
+                    </div>
+                    {% if route["parameters"] | length > 0 %}
+                        <h3>Parameters</h3>
+                        {% for parameter in route["parameters"] %}
+                            <div class="toolbox-api-route-info-parameter {{ route["classes"]["border-top"] }}">
+                                <div class="toolbox-api-route-info-parameter-definition">
+                                    <div class="toolbox-api-route-info-parameter-name">
+                                        {{ parameter["name"] }}{{ parameter["required"] ? "*" : "" }}
+                                    </div>
+                                    <div class="toolbox-api-route-info-parameter-type">
+                                        {{ parameter["type"] }}
+                                    </div>
+                                    <div class="toolbox-api-route-info-parameter-required">
+                                        {{ parameter["required"] ? "*Required" : "" }}
+                                    </div>
+                                </div>
+                                <div class="toolbox-api-route-info-parameter-description">
+                                    {{ parameter["description"] }}<br/><br/>
+                                    {% if parameter["default"] is not null %}
+                                        <div>
+                                            <span class="parameter-default">Default: </span>{{ parameter["default"] }}
+                                        </div>
+                                    {% endif %}
+                                    {% if parameter["oneOf"] is not null %}
+                                        <div>
+                                            <span class="parameter-default">Can be one of: </span>{{ parameter["oneOf"] }}
+                                        </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        {% endfor %}
+                    {% endif %}
+                    {% if route["responses"] | length > 0 %}
+                        <h3>Responses</h3>
+                        <div class="toolbox-api-route-info-responses">
+                            <table>
+                                <thead>
+                                <tr>
+                                    <th>Code</th>
+                                    <th>Description</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                    {% for response in route["responses"] %}
+                                        <tr>
+                                            <td>{{ response["code"] }}</td>
+                                            <td>
+                                                {{ response["description"] }}
+                                                {% if response["example"] is not null %}
+                                                    <br>
+                                                    <div>{{ dump(response["example"]) }}</div>
+                                                {% endif %}
+                                            </td>
+                                        </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    {% endif %}
+                    {% if route["privileges"] | length > 0 %}
+                        <h3>Privileges</h3>
+                        {% for privileges in route["privileges"] %}
+                            {{ dump(privileges) }}
+                        {% endfor %}
+                    {% endif %}
+                </div>
+            </div>
+        {% endfor %}
+    {% endfor %}
+</div>
+
+<script>
+    $(document).on("click", ".toolbox-api-route-preview", function() {
+        if ($(this).next().css("display") === "none") {
+            $(this).next().css("display", "flex");
+        } else {
+            $(this).next().css("display", "none");
+        }
+    });
+</script>
+
+</body>
+</html>

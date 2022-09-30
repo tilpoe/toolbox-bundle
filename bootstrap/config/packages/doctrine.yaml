@@ -1,0 +1,44 @@
+doctrine:
+  dbal:
+    default_connection: default
+    connections:
+      default:
+        dbname: "%env(DB_NAME)%"
+        host: "%env(DB_HOST)%"
+        port: "%env(DB_PORT)%"
+        user: "%env(DB_USER)%"
+        password: "%env(DB_PASSWORD)%" # muss ggf. kurz geändert werden in konstante für die Generierung von Geheimnissen
+        driver: pdo_mysql
+        server_version: "%env(DB_VERSION)%"
+      #shopware:
+      #  dbname: "%env(DB_NAME_SW)%"
+      #  host: "%env(DB_HOST_SW)%"
+      #  port: "%env(DB_PORT_SW)%"
+      #  user: "%env(DB_USER_SW)%"
+      #  password: "%env(DB_PASSWORD_SW)%" # muss ggf. kurz geändert werden in konstante für die Generierung von Geheimnissen
+      #  driver: pdo_mysql
+      #  server_version: "%env(DB_VERSION_SW)%"
+  orm:
+    auto_generate_proxy_classes: true
+    default_entity_manager: default
+    entity_managers:
+      default:
+        naming_strategy: doctrine.orm.naming_strategy.underscore_number_aware
+        connection: default
+        mappings:
+          App:
+            is_bundle: false
+            type: attribute
+            dir: '%kernel.project_dir%/src/Entity'
+            prefix: 'App\Entity'
+            alias: App
+      #shopware:
+      #  naming_strategy: doctrine.orm.naming_strategy.underscore_number_aware
+      #  connection: shopware
+      #  mappings:
+      #    Shopware:
+      #      is_bundle: false
+      #      type: attribute
+      #      dir: '%kernel.project_dir%/src/ShopwareEntity'
+      #      prefix: 'App\ShopwareEntity'
+      #      alias: SW
