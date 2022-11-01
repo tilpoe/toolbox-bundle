@@ -194,7 +194,7 @@ class Serializer {
                             }
 
                             if (!$formatted) {
-                                $datetime = $datetime->format("Y-m-d H:i:s");
+                                $datetime = $datetime->format("Y-m-d\TH:i:s");
                             }
                         }
                         $result[$property] = $datetime;
