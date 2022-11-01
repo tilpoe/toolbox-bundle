@@ -55,7 +55,7 @@ class InjectParameters {
             switch ($attributeInstance->getType()) {
                 case Parameter::TYPE_DATETIME:
                     try {
-                        $value = DateTime::createImmutable($value);
+                        $value = DateTime::create($value);
                     } catch (\Exception) {
                         throw new BadRequestException("Expected type DATETIME for attribute {$attributeInstance->getKey()}.");
                     }
