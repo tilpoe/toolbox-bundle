@@ -126,9 +126,15 @@ class Serializer {
             // we want to serialize every getter method of the entity
             $methodName = $method->getName();
 
-            if (str_starts_with($methodName, "get")) {
+            $offset = match(true) {
+                str_starts_with($methodName, "get") => 3,
+                str_starts_with($methodName, "is") => 2,
+                default => false
+            };
+
+            if ($offset) {
                 // isolate the affected property from the getter name
-                $property = lcfirst(substr($methodName, 3));
+                $property = lcfirst(substr($methodName, $offset));
                 $returnType = $method->getReturnType()?->getName();
 
                 // check attributes
@@ -181,21 +187,10 @@ class Serializer {
                     // to the corresponding getter method of the entity
                     case "DateTime":
                     case "DateTimeImmutable":
+                    case "DateTimeInterface":
                         $datetime = $method->invoke($data);
                         if ($datetime) {
-                            $attributes = $method->getAttributes(FormatDateTime::class);
-                            $formatted = false;
-                            if (sizeof($attributes) > 0) {
-                                $formatter = $attributes[0]->newInstance();
-                                if ($formatter instanceof FormatDateTime) {
-                                    $datetime = $datetime->format($formatter->format);
-                                    $formatted = true;
-                                }
-                            }
-
-                            if (!$formatted) {
-                                $datetime = $datetime->format("Y-m-d\TH:i:s");
-                            }
+                            $datetime = $datetime->format("c");
                         }
                         $result[$property] = $datetime;
                         break;
@@ -211,7 +206,7 @@ class Serializer {
                                     break;
                                 }
 
-                                $result[$property] = $round < $maxDepth ? $this->serializeRecursive($subEntity, $round + 1, $maxDepth, $user) : ["id" => $subEntity->getId()];
+                                $result[$property] = $round < $maxDepth ? $this->serializeRecursive($subEntity, $round + 1, $maxDepth, $user) : $subEntity->getId();
                                 break;
                             case $returnType === "array":
                                 $subEntities = $method->invoke($data);

@@ -16,6 +16,7 @@ return function(ContainerConfigurator $container) {
     $container->services()
         ->set(ExceptionListener::class)
             ->tag($tag, ["event" => $event_exception])
+            ->tag("monolog.logger", ["channel" => "api"])
             ->arg("\$env", "%kernel.environment%")
 
         ->set(ApiAttributeListener::class)

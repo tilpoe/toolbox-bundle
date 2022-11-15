@@ -67,7 +67,7 @@ class Parameter {
     public function getDefault(): mixed {
         switch (true) {
             case $this->type == self::TYPE_DATETIME && $this->default !== null:
-                return DateTime::createImmutable()->format($this->default);
+                return (new \DateTimeImmutable())->format($this->default);
 
             default:
                 return $this->default;

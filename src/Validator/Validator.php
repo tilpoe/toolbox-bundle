@@ -152,4 +152,9 @@ class Validator {
         return $this;
     }
 
+    public function removeAll(): self {
+        $this->collection = [];
+        return $this;
+    }
+
 }

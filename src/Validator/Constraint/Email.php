@@ -21,6 +21,8 @@ class Email extends Constraint implements ConstraintInterface {
      * @return Violation|null
      */
     public function validate(mixed $value): ?Violation {
+        if ($value === null) return null;
+
         if ($this->condition) {
             if (
                 !is_string($value) ||

@@ -8,10 +8,11 @@ use Feierstoff\ToolboxBundle\Validator\Violation;
 class NotBlank extends Constraint implements ConstraintInterface {
 
     public function __construct(
-        private string $message = "This value should not be blank.",
+        private string $message = "",
+        private bool $empty = false,
         private bool $condition = true
     ) {
-        parent::__construct(Constraint::NOT_BLANK, $message, $condition);
+        parent::__construct(Constraint::NOT_BLANK, $message == "" ? "This value should not be blank." : $message, $condition);
     }
 
     /**
@@ -24,7 +25,7 @@ class NotBlank extends Constraint implements ConstraintInterface {
         }
 
         if ($this->condition) {
-            return $value === null ? $this->getViolation() : null;
+            return ($value === null || $this->empty && empty($value)) ? $this->getViolation() : null;
         }
 
         return null;

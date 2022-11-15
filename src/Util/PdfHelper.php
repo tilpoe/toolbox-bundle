@@ -23,6 +23,7 @@ class PdfHelper
      */
     public static function create(string $title, string $filenameOrPath, ?array $customOptions = null): PdfHelper
     {
+
         return new PdfHelper($title, $filenameOrPath, $customOptions);
     }
 
@@ -79,7 +80,7 @@ class PdfHelper
     /**
      * @throws InternalServerException
      */
-    public function write(string $html, bool $newPage = false): Pdf
+    public function write(string $html, bool $newPage = false): PdfHelper
     {
         if ($newPage) {
             $this->mpdf->AddPage();
@@ -126,6 +127,10 @@ class PdfHelper
         } catch (Exception) {
             throw new InternalServerException("Error returning .pdf file as string.");
         }
+    }
+
+    public static function concatHtml(string $base, string $html) {
+        return $base . $html;
     }
 
     /**
