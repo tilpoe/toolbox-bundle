@@ -190,7 +190,7 @@ class Serializer {
                     case "DateTimeInterface":
                         $datetime = $method->invoke($data);
                         if ($datetime) {
-                            $datetime = $datetime->format("c");
+                            $datetime = $datetime->format("Y-m-d\TH:i:s+01:00");
                         }
                         $result[$property] = $datetime;
                         break;

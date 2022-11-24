@@ -11,12 +11,17 @@ use Feierstoff\ToolboxBundle\Exception\ViolationException;
 use Feierstoff\ToolboxBundle\Response\ExceptionResponse;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpKernel\Event\ExceptionEvent;
+use Symfony\Component\Mailer\Transport\TransportInterface;
+use Symfony\Component\Mime\Address;
+use Symfony\Component\Mime\Email;
 
 class ExceptionListener {
 
     public function __construct(
         private string $env,
-        private readonly LoggerInterface $apiLogger
+        private readonly LoggerInterface $apiLogger,
+        private array $config,
+        private readonly TransportInterface $mailer,
     ) {}
 
     public function __invoke(ExceptionEvent $event): void {
@@ -61,6 +66,26 @@ class ExceptionListener {
                 if ($this->env != "prod") {
                     $event->setResponse(new ExceptionResponse($data));
                 } else {
+                    if ($this->config["mailer"]["send"]["exception"]) {
+                        $mail = (new Email())
+                            ->from(new Address($this->config["mailer"]["sender"]["mail"], $this->config["mailer"]["sender"]["name"]))
+                            ->to($this->config["mailer"]["send"]["exception"])
+                            ->subject("InternalServerException")
+                            ->html("
+                                Ein Fehler ist aufgetreten. <br/><br/>
+                            
+                                Message: {$exception->getMessage()} <br/><br/>
+                                
+                                Trace: {$exception->getTraceAsString()}
+                            ");
+
+                        try {
+                            $this->mailer->send($mail);
+                        } catch (\Exception $e) {
+
+                        }
+                    }
+
                     $event->setResponse(new ExceptionResponse());
                 }
         }

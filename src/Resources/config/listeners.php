@@ -18,6 +18,7 @@ return function(ContainerConfigurator $container) {
             ->tag($tag, ["event" => $event_exception])
             ->tag("monolog.logger", ["channel" => "api"])
             ->arg("\$env", "%kernel.environment%")
+            ->arg("\$mailer", service("mailer.default_transport"))
 
         ->set(ApiAttributeListener::class)
             ->tag($tag, ["event" => $event_controller])

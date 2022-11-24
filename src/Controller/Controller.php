@@ -24,6 +24,11 @@ abstract class Controller extends \Symfony\Bundle\FrameworkBundle\Controller\Abs
 
     private ?SessionInterface $session;
 
+    /**
+     * @var \Exception[]
+     */
+    private array $queuedExceptions = [];
+
     #[Required]
     public function setEm(ManagerRegistry $managerRegistry) {
         $this->managerRegistry = $managerRegistry;
@@ -83,5 +88,15 @@ abstract class Controller extends \Symfony\Bundle\FrameworkBundle\Controller\Abs
 
     protected function getProjectDir(): string {
         return $this->getParameter(SymfonyParameter::ROOT_DIR);
+    }
+
+    protected function queueException(\Exception $exception): void {
+        $this->queuedExceptions[] = $exception;
+    }
+
+    protected function triggerException(): void {
+        if (count($this->queuedExceptions) > 0) {
+            throw $this->queuedExceptions[0];
+        }
     }
 }

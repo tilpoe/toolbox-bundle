@@ -6,6 +6,7 @@ use Feierstoff\ToolboxBundle\Auth\Authenticator;
 use Feierstoff\ToolboxBundle\Auth\Listener\AccessControlListener;
 use Feierstoff\ToolboxBundle\Controller\ApiDocController;
 use Feierstoff\ToolboxBundle\Controller\FallbackController;
+use Feierstoff\ToolboxBundle\EventListener\ExceptionListener;
 use Feierstoff\ToolboxBundle\Route\FallbackRoute;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
@@ -31,6 +32,8 @@ class ToolboxExtension extends Extension {
         $loader->load("listeners.php");
         $accessControlListener = $container->getDefinition(AccessControlListener::class);
         $accessControlListener->setArgument("\$conf_user_entity", $config["user_entity"]);
+        $exceptionListener = $container->getDefinition(ExceptionListener::class);
+        $exceptionListener->setArgument("\$config", $config);
 
 
 
